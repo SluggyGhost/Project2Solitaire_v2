@@ -10,7 +10,7 @@ require "grabber"
 function love.load()
   love.window.setTitle("Solitaire v2")
   
-  -- Image Tables
+  -- Load Card Assets
   suitImages = {
     hearts = love.graphics.newImage("images/pip_heart.png"),
     diamonds = love.graphics.newImage("images/pip_diamond.png"),
@@ -96,4 +96,31 @@ function checkForMouseHover()
   for _, card in ipairs(drawnCards) do
     card:checkForMouseOver(grabber)
   end
+end
+
+function shuffle(deck)
+    local cardCount = #deck
+    for i = 1, cardCount do
+        local randIndex = math.random(cardCount)
+        local temp = deck[randIndex]
+        deck[randIndex] = deck[cardCount]
+        deck[cardCount] = temp
+        cardCount = cardCount - 1
+    end
+    return deck
+end
+
+function drawCard()
+  if #deckTable > 0 then
+    local card = table.remove(deckTable)
+    table.insert(drawnCards, card)
+  end
+end
+
+function resetDeck()
+  for _, card in ipairs(drawnCards) do
+    table.insert(deckTable, card)
+  end
+  drawnCards = {}
+  shuffle(deckTable)
 end

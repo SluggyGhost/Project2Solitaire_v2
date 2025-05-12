@@ -32,6 +32,7 @@ function love.load()
     [12] = love.graphics.newImage("images/12.png"),
     [13] = love.graphics.newImage("images/13.png")
   }
+  faceDownImage = love.graphics.newImage("images/card_face_down.png")
   
   -- Set the window and background
   love.window.setMode(960, 640)
@@ -40,15 +41,14 @@ function love.load()
   -- Important values
   width = love.graphics.getWidth()
   height = love.graphics.getHeight()
-  centerX = width / 2
-  centerY = height / 2
-  deckX, deckY = 100, 300
+  centerX, centerY = width / 2, height / 2
+  deckX, deckY = centerX/8, centerY/4
   
   -- Game elements
   grabber = GrabberClass:new()  -- Cursor
   deckTable = {}  -- Full deck
   drawnCards = {} -- Cards drawn from deck
-  deckX, deckY = 100, 300
+  -- deckX, deckY = 100, 300
   deckWidth, deckHeight = 60, 90
   
   -- Load images
@@ -69,7 +69,6 @@ function love.load()
       table.insert(deckTable, CardClass:new(0, 0, suit, rank))
     end
   end
-
   
   table.insert(drawnCards, CardClass:new(100, 100, SUIT.HEARTS, 5))
   table.insert(drawnCards, CardClass:new(300, 100, SUIT.SPADES, 13))
@@ -79,16 +78,24 @@ function love.update()
   grabber:update()
   checkForMouseHover()
   
+  
+  
   for _, card in ipairs(drawnCards) do
     card:update()
   end
 end
 
 function love.draw()
+  -- Deck
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.draw(faceDownImage, deckX, deckY)
+
+  -- Cards
   for _, card in ipairs(drawnCards) do
     card:draw()
   end
   
+  -- Card shadow
   love.graphics.setColor(1, 1, 1, 1)
   if grabber.currentMousePos then
     love.graphics.print("Mouse: " .. tostring(grabber.currentMousePos.x) .. ", " .. tostring(grabber.currentMousePos.y))

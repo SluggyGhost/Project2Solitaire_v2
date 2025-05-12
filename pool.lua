@@ -64,3 +64,26 @@ end
 function DeckPrototype:drawFromDeck()
   return table.remove(self.cards)
 end
+function DeckPrototype:shuffle()
+  local cardCount = #self.cards
+  for i = 1, cardCount do
+    local randIndex = math.random(cardCount)
+    local temp = self.cards[randIndex]
+    self.cards[randIndex] = self.cards[cardCount]
+    self.cards[cardCount] = temp
+    cardCount = cardCount - 1
+  end
+end
+
+-- DRAW PILE
+DrawPilePrototype = PoolPrototype:new(xPos, yPos, true, 55, 0)
+function DrawPilePrototype:new()
+  return DrawPilePrototype
+end
+
+
+
+-- SUIT PILES
+
+-- TABLEAU
+

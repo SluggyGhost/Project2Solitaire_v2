@@ -49,7 +49,7 @@ function love.load()
   -- Game elements
   grabber = GrabberClass:new()  -- Cursor
   deck = DeckPrototype:new(deckX, deckY)  -- Full deck
-  drawnCards = {} -- Cards drawn from deck
+  drawnCards = DrawPilePrototype:new(centerX, deckY) -- Cards drawn from deck
   
   -- Load images
   images = {}
@@ -71,10 +71,15 @@ function love.load()
     end
   end
 
-  -- shuffle(deck)
-  
-  table.insert(drawnCards, deck:drawFromDeck())
-  table.insert(drawnCards, deck:drawFromDeck())
+  deck:shuffle()
+
+  card = deck:drawFromDeck()
+  drawnCards:addCard(card)
+  card = deck:drawFromDeck()
+  drawnCards:addCard(card)
+  for _, card in ipairs(drawnCards.cards) do
+    print(card.suit .. " " .. card.rank)
+  end
 end
 
 function love.update()
@@ -129,45 +134,3 @@ function checkForMouseHover()
     card:checkForMouseOver(grabber)
   end
 end
-
--- function shuffle(deck)
---   local cardCount = #deck
---   for i = 1, cardCount do
---       local randIndex = math.random(cardCount)
---       local temp = deck[randIndex]
---       deck[randIndex] = deck[cardCount]
---       deck[cardCount] = temp
---       cardCount = cardCount - 1
---   end
---   return deck
--- end
-
-function drawCard()
-  if #deck > 0 then
-    local card = table.remove(deck)
-    table.insert(drawnCards, card)
-  end
-end
-
-function returnCard()
-  if #drawnCards > 0 then
-  end
-end
-
-
-function resetDeck()
-  for _, card in ipairs(drawnCards) do
-    table.insert(deck, card)
-  end
-  drawnCards = {}
-  shuffle(deck)
-end
-
--- function clickDeck()
---   local isMouseOver = mousePos.x > deckX and mousePos.x < deckX + deckWidth and mousePos.y > deckY and mousePos.y < deckY + deckHeight
-
---   if isMouseOver then
---     print("click here")
---   end
--- end
-

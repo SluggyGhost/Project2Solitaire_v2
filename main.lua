@@ -71,10 +71,10 @@ function love.load()
     end
   end
 
-  shuffle(deck)
+  -- shuffle(deck)
   
-  table.insert(drawnCards, CardClass:new(100, 100, SUIT.HEARTS, 5))
-  table.insert(drawnCards, CardClass:new(300, 100, SUIT.SPADES, 13))
+  table.insert(drawnCards, deck:drawFromDeck())
+  table.insert(drawnCards, deck:drawFromDeck())
 end
 
 function love.update()
@@ -130,17 +130,17 @@ function checkForMouseHover()
   end
 end
 
-function shuffle(deck)
-  local cardCount = #deck
-  for i = 1, cardCount do
-      local randIndex = math.random(cardCount)
-      local temp = deck[randIndex]
-      deck[randIndex] = deck[cardCount]
-      deck[cardCount] = temp
-      cardCount = cardCount - 1
-  end
-  return deck
-end
+-- function shuffle(deck)
+--   local cardCount = #deck
+--   for i = 1, cardCount do
+--       local randIndex = math.random(cardCount)
+--       local temp = deck[randIndex]
+--       deck[randIndex] = deck[cardCount]
+--       deck[cardCount] = temp
+--       cardCount = cardCount - 1
+--   end
+--   return deck
+-- end
 
 function drawCard()
   if #deck > 0 then

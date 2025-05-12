@@ -61,3 +61,6 @@ function DeckPrototype:addCardToBottom(card)
   table.insert(self.cards, 1, card)
   self:updateCardPositions()
 end
+function DeckPrototype:drawFromDeck()
+  return table.remove(self.cards)
+end

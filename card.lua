@@ -86,3 +86,8 @@ function CardClass:checkForMouseOver(grabber)
   
   return isMouseOver
 end
+
+function isOppositeColor(card1, card2)
+  local redSuits = { hearts = true, diamonds = true }
+  return (redSuits[card1.suit] and not redSuits[card2.suit]) or (not redSuits[card1.suit] and redSuits[card2.suit])
+end

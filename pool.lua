@@ -51,3 +51,13 @@ function PoolPrototype:draw()
     card:draw()
   end
 end
+
+-- DECK
+DeckPrototype = PoolPrototype:new(xPos, yPos)
+function DeckPrototype:new()
+  return DeckPrototype
+end
+function DeckPrototype:addCardToBottom(card)
+  table.insert(self.cards, 1, card)
+  self:updateCardPositions()
+end

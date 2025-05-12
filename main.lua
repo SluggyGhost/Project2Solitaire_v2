@@ -6,6 +6,7 @@ io.stdout:setvbuf("no")
 
 require "card"
 require "grabber"
+require "pool"
 
 function love.load()
   love.window.setTitle("Solitaire v2")
@@ -47,7 +48,7 @@ function love.load()
   
   -- Game elements
   grabber = GrabberClass:new()  -- Cursor
-  deckTable = {}  -- Full deck
+  deck = DeckPrototype:new(deckX, deckY)  -- Full deck
   drawnCards = {} -- Cards drawn from deck
   
   -- Load images
@@ -65,11 +66,12 @@ function love.load()
   -- Create deck of cards
   for _, suit in ipairs({SUIT.HEARTS, SUIT.DIAMONDS, SUIT.CLUBS, SUIT.SPADES}) do
     for rank = 1, 13 do
-      table.insert(deckTable, CardClass:new(0, 0, suit, rank))
+      local card = CardClass:new(0, 0, suit, rank)
+      deck:addCard(card)
     end
   end
 
-  shuffle(deckTable)
+  shuffle(deck)
   
   table.insert(drawnCards, CardClass:new(100, 100, SUIT.HEARTS, 5))
   table.insert(drawnCards, CardClass:new(300, 100, SUIT.SPADES, 13))
@@ -141,8 +143,8 @@ function shuffle(deck)
 end
 
 function drawCard()
-  if #deckTable > 0 then
-    local card = table.remove(deckTable)
+  if #deck > 0 then
+    local card = table.remove(deck)
     table.insert(drawnCards, card)
   end
 end
@@ -155,10 +157,10 @@ end
 
 function resetDeck()
   for _, card in ipairs(drawnCards) do
-    table.insert(deckTable, card)
+    table.insert(deck, card)
   end
   drawnCards = {}
-  shuffle(deckTable)
+  shuffle(deck)
 end
 
 -- function clickDeck()

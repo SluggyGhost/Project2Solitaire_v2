@@ -36,6 +36,13 @@ function love.load()
   -- Set the window and background
   love.window.setMode(960, 640)
   love.graphics.setBackgroundColor(0, 0.7, 0.2, 1)
+
+  -- Important values
+  width = love.graphics.getWidth()
+  height = love.graphics.getHeight()
+  centerX = width / 2
+  centerY = height / 2
+  deckX, deckY = 100, 300
   
   -- Game elements
   grabber = GrabberClass:new()  -- Cursor

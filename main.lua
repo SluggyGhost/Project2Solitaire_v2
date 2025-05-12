@@ -43,13 +43,12 @@ function love.load()
   height = love.graphics.getHeight()
   centerX, centerY = width / 2, height / 2
   deckX, deckY = centerX/8, centerY/4
+  deckWidth, deckHeight = 53, 73
   
   -- Game elements
   grabber = GrabberClass:new()  -- Cursor
   deckTable = {}  -- Full deck
   drawnCards = {} -- Cards drawn from deck
-  -- deckX, deckY = 100, 300
-  deckWidth, deckHeight = 60, 90
   
   -- Load images
   images = {}
@@ -69,6 +68,8 @@ function love.load()
       table.insert(deckTable, CardClass:new(0, 0, suit, rank))
     end
   end
+
+  shuffle(deckTable)
   
   table.insert(drawnCards, CardClass:new(100, 100, SUIT.HEARTS, 5))
   table.insert(drawnCards, CardClass:new(300, 100, SUIT.SPADES, 13))
@@ -77,8 +78,8 @@ end
 function love.update()
   grabber:update()
   checkForMouseHover()
-  
-  
+
+  -- clickDeck()
   
   for _, card in ipairs(drawnCards) do
     card:update()
@@ -87,8 +88,23 @@ end
 
 function love.draw()
   -- Deck
-  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setColor(1, 1, 1, 1) -- white (for images)
   love.graphics.draw(faceDownImage, deckX, deckY)
+
+  -- Suit Piles and Tableaus
+  love.graphics.setColor(0, 1, 0, 1) -- green
+  love.graphics.rectangle("line", centerX, deckY, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX * 1.2, deckY, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX * 1.4, deckY, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX * 1.6, deckY, deckWidth, deckHeight)
+  
+  love.graphics.rectangle("line", centerX*0.2, centerY*2/3, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX*0.4, centerY*2/3, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX*0.6, centerY*2/3, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX*0.8, centerY*2/3, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX*1.0, centerY*2/3, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX*1.2, centerY*2/3, deckWidth, deckHeight)
+  love.graphics.rectangle("line", centerX*1.4, centerY*2/3, deckWidth, deckHeight)
 
   -- Cards
   for _, card in ipairs(drawnCards) do
@@ -112,6 +128,29 @@ function checkForMouseHover()
   end
 end
 
+function shuffle(deck)
+  local cardCount = #deck
+  for i = 1, cardCount do
+      local randIndex = math.random(cardCount)
+      local temp = deck[randIndex]
+      deck[randIndex] = deck[cardCount]
+      deck[cardCount] = temp
+      cardCount = cardCount - 1
+  end
+  return deck
+end
+
+function drawCard()
+  if #deckTable > 0 then
+    local card = table.remove(deckTable)
+    table.insert(drawnCards, card)
+  end
+end
+
+function returnCard()
+  if #drawnCards > 0 then
+  end
+end
 
 
 function resetDeck()
@@ -121,3 +160,12 @@ function resetDeck()
   drawnCards = {}
   shuffle(deckTable)
 end
+
+-- function clickDeck()
+--   local isMouseOver = mousePos.x > deckX and mousePos.x < deckX + deckWidth and mousePos.y > deckY and mousePos.y < deckY + deckHeight
+
+--   if isMouseOver then
+--     print("click here")
+--   end
+-- end
+

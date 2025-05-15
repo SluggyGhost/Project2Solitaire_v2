@@ -16,10 +16,12 @@ function PoolPrototype:new(xPos, yPos, showCards, offsetX, offsetY)
   
   return pool
 end
+
 function PoolPrototype:addCard(card)
   table.insert(self.cards, card)
   self:updateCardPositions()
 end
+
 function PoolPrototype:removeCard(card)
   for i, c in ipairs(self.cards) do
     if c == card then
@@ -29,16 +31,19 @@ function PoolPrototype:removeCard(card)
   end
   self:updateCardPositions()
 end
+
 function PoolPrototype:updateCardPositions()
   for i, card in ipairs(self.cards) do
     card.position = self.position + self.offset * (i-1)
   end
 end
+
 function PoolPrototype:isCardNearSnap(card)
   if not card or not card.position then return false end
   local dist = math.sqrt((card.position.x - self.position.x)^2 + (card.position.y - self.position.y)^2)
   return dist <= self.snapRadius
 end
+
 function PoolPrototype:trySnap(card)
   if self:isCardNearSnap(card) then
     self:addCard(card)
@@ -46,6 +51,7 @@ function PoolPrototype:trySnap(card)
   end
   return false
 end
+
 function PoolPrototype:draw()
   for _, card in ipairs(self.cards) do
     card:draw()
@@ -57,13 +63,16 @@ DeckPrototype = PoolPrototype:new(xPos, yPos)
 function DeckPrototype:new()
   return DeckPrototype
 end
+
 function DeckPrototype:addCardToBottom(card)
   table.insert(self.cards, 1, card)
   self:updateCardPositions()
 end
+
 function DeckPrototype:drawFromDeck()
   return table.remove(self.cards)
 end
+
 function DeckPrototype:shuffle()
   local cardCount = #self.cards
   for i = 1, cardCount do

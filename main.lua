@@ -7,6 +7,9 @@ io.stdout:setvbuf("no")
 require "card"
 require "grabber"
 require "pool"
+require "button"
+require "const"
+require "vector"
 
 function love.load()
   love.window.setTitle("Solitaire v2")
@@ -38,18 +41,12 @@ function love.load()
   -- Set the window and background
   love.window.setMode(960, 640)
   love.graphics.setBackgroundColor(0, 0.7, 0.2, 1)
-
-  -- Important values
-  width = love.graphics.getWidth()
-  height = love.graphics.getHeight()
-  centerX, centerY = width / 2, height / 2
-  deckX, deckY = centerX/8, centerY/4
-  deckWidth, deckHeight = 53, 73
   
   -- Game elements
   grabber = GrabberClass:new()  -- Cursor
   deck = DeckPrototype:new(deckX, deckY)  -- Full deck
   drawnCards = DrawPilePrototype:new(centerX, deckY) -- Cards drawn from deck
+  resetButton = ButtonClass:new(centerX, centerY, "RESET", 100, 100, function() resetState() end)
   
   -- Load images
   images = {}
@@ -94,6 +91,8 @@ function love.update()
 end
 
 function love.draw()
+  resetButton:draw()
+
   -- Deck
   love.graphics.setColor(1, 1, 1, 1) -- white (for images)
   love.graphics.draw(faceDownImage, deckX, deckY)
@@ -105,13 +104,11 @@ function love.draw()
   love.graphics.rectangle("line", centerX * 1.4, deckY, deckWidth, deckHeight)
   love.graphics.rectangle("line", centerX * 1.6, deckY, deckWidth, deckHeight)
   
-  love.graphics.rectangle("line", centerX*0.2, centerY*2/3, deckWidth, deckHeight)
-  love.graphics.rectangle("line", centerX*0.4, centerY*2/3, deckWidth, deckHeight)
-  love.graphics.rectangle("line", centerX*0.6, centerY*2/3, deckWidth, deckHeight)
-  love.graphics.rectangle("line", centerX*0.8, centerY*2/3, deckWidth, deckHeight)
-  love.graphics.rectangle("line", centerX*1.0, centerY*2/3, deckWidth, deckHeight)
-  love.graphics.rectangle("line", centerX*1.2, centerY*2/3, deckWidth, deckHeight)
-  love.graphics.rectangle("line", centerX*1.4, centerY*2/3, deckWidth, deckHeight)
+  local tableauAlign = 0
+  for i = 1, 7 do
+    tableauAlign = tableauAlign + tableauLeftEdge
+    love.graphics.rectangle("line", tableauAlign, tableauY, deckWidth, deckHeight)
+  end
 
   -- Cards
   for _, card in ipairs(drawnCards) do
@@ -133,4 +130,8 @@ function checkForMouseHover()
   for _, card in ipairs(drawnCards) do
     card:checkForMouseOver(grabber)
   end
+end
+
+function resetState()
+  print("RESET THE GAME HERE")
 end

@@ -1,22 +1,7 @@
 
-require "vector"
-
 CardClass = {}
 
-CARD_STATE = {
-  IDLE = 0,
-  MOUSE_OVER = 1,
-  GRABBED = 2
-}
-
-SUIT = {
-  HEARTS = "hearts",
-  DIAMONDS = "diamonds",
-  CLUBS = "clubs",
-  SPADES = "spades"
-}
-
-function CardClass:new(xPos, yPos, suit, rank)
+function CardClass:new(xPos, yPos, suit, rank, faceUp)
   local card = {}
   local metadata = {__index = CardClass}
   setmetatable(card, metadata)
@@ -28,6 +13,7 @@ function CardClass:new(xPos, yPos, suit, rank)
   
   card.suit = suit
   card.rank = rank
+  card.faceUp = faceUp or false
   
   return card
 end

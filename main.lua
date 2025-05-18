@@ -46,58 +46,38 @@ function love.load()
   grabber = GrabberClass:new()  -- Cursor
   deck = DeckPrototype:new(deckX, deckY)  -- Full deck
   drawnCards = DrawPilePrototype:new(centerX, deckY) -- Cards drawn from deck
-  resetButton = ButtonClass:new(centerX, centerY, "RESET", 100, 100, function() resetState() end)
-  
-  -- Load images
-  images = {}
-  for nameIndex, name in ipairs({
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-      'pip_heart', 'pip_diamond', 'pip_club', 'pip_spade',
-      'mini_heart', 'mini_diamond', 'mini_club', 'mini_spade',
-      'card', 'card_face_down',
-      'face_jack', 'face_queen', 'face_king',
-  }) do
-      images[name] = love.graphics.newImage('images/'..name..'.png')
-  end
-  
-  -- Create deck of cards
-  for _, suit in ipairs({SUIT.HEARTS, SUIT.DIAMONDS, SUIT.CLUBS, SUIT.SPADES}) do
-    for rank = 1, 13 do
-      local card = CardClass:new(0, 0, suit, rank)
-      deck:addCard(card)
-    end
-  end
+  tableaus = {
+    TableauPrototype:new(100, 300),
+    TableauPrototype:new(200, 300),
+    TableauPrototype:new(300, 300),
+    TableauPrototype:new(400, 300),
+    TableauPrototype:new(500, 300),
+    TableauPrototype:new(600, 300),
+    TableauPrototype:new(700, 300),
+  }
+  resetButton = ButtonClass:new(820, 550, "RESET", 100, 40, function() resetState() end)
+  drawButton = ButtonClass:new(100, 100, "", 60, 90, function() drawThreeCards() end)
 
-  deck:shuffle()
-
-  card = deck:drawFromDeck()
-  drawnCards:addCard(card)
-  card = deck:drawFromDeck()
-  drawnCards:addCard(card)
-  for _, card in ipairs(drawnCards.cards) do
-    print(card.suit .. " " .. card.rank)
-  end
+  resetState()
 end
 
-function love.update()
-  grabber:update()
-  checkForMouseHover()
-
-  -- clickDeck()
-  
-  for _, card in ipairs(drawnCards) do
-    card:update()
-  end
+function love.update(dt)
+  local allPools = {deck, drawnCards}
+  for _, t in ipairs(tableaus) do table.insert(allPools, t) end
+  grabber:update(allPools)
 end
 
 function love.draw()
   resetButton:draw()
+  drawButton:draw()
+
+  deck:draw()
 
   -- Deck
   love.graphics.setColor(1, 1, 1, 1) -- white (for images)
   love.graphics.draw(faceDownImage, deckX, deckY)
 
-  -- Suit Piles and Tableaus
+  -- Suit Piles and Tableaus (spaces)
   love.graphics.setColor(0, 1, 0, 1) -- green
   love.graphics.rectangle("line", centerX, deckY, deckWidth, deckHeight)
   love.graphics.rectangle("line", centerX * 1.2, deckY, deckWidth, deckHeight)
@@ -110,10 +90,10 @@ function love.draw()
     love.graphics.rectangle("line", tableauAlign, tableauY, deckWidth, deckHeight)
   end
 
-  -- Cards
-  for _, card in ipairs(drawnCards) do
-    card:draw()
-  end
+  -- -- Cards
+  -- for _, card in ipairs(allPools) do
+  --   card:draw()
+  -- end
   
   -- Card shadow
   love.graphics.setColor(1, 1, 1, 1)
@@ -154,7 +134,7 @@ function resetState()
   for i = 1, 7 do
     for j = 1, i do
       local card = deck:drawFromDeck()
-      table.insert(tableaus[i].cards, card)
+      tableaus[i]:addCard(card)
     end
     -- Flip the top card face-up
     local topCard = tableaus[i].cards[#tableaus[i].cards]
@@ -167,5 +147,20 @@ function love.mousePressed(x, y, button)
   if button == 1 then
     local mousePos = Vector(x, y)
     resetButton:click(mousePos)
+  end
+end
+
+
+-- Draw 3 new cards
+function drawThreeCards()
+  for i = #drawnCards.cards, 1, -1 do
+    local card = table.remove(drawnCards.cards, i)
+    deck:addCardToBottom(card)
+  end
+
+  for i = 1, 3 do
+    local card = deck:drawFromDeck()
+    if not card then break end
+    drawnCards:addCard(card)
   end
 end

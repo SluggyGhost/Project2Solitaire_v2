@@ -90,9 +90,50 @@ function DrawPilePrototype:new()
   return DrawPilePrototype
 end
 
-
-
 -- SUIT PILES
+SuitPilePrototype = PoolPrototype:new()
+function SuitPilePrototype:new(xPos, yPos)
+  local pile = PoolPrototype.new(self, xPos, yPos, true, 0, 0)
+  setmetatable(pile, {__index = SuitPilePrototype})
+  return pile
+end
+
+function SuitPilePrototype:isValidMove(card)
+  local top = self.cards[#self.cards]
+  if not top then
+    return card.rank == 1 -- Only Aces can go in empty suit piles
+  end
+  return card.suit == top.suit and card.rank == top.rank + 1
+end
+
+function SuitPilePrototype:trySnap(card)
+  if self:isCardNearSnap(card) and self:isValidMove(card) then
+    self:addCard(card)
+    return true
+  end
+  return false
+end
 
 -- TABLEAU
+TableauPrototype = PoolPrototype:new()
+function TableauPrototype:new(xPos, yPos)
+  local tableau = PoolPrototype:new(xPos, yPos, true, 0, 30)
+  setmetatable(tableau, {__index = TableauPrototype})
+  return tableau
+end
 
+function TableauPrototype:isValidMove(card)
+  local top = self.cards[#self.cards]
+  if not top then
+    return card.rank == 13 -- Only Kings can go in empty tableaus
+  end
+  return top.faceUp and card.color ~= top.color and card.rank == top.rank - 1
+end
+
+function TableauPrototype:trySnap(card)
+  if self:isCardNearSnap(card) and self:isValidMove(card) then
+    self:addCard(card)
+    return true
+  end
+  return false
+end

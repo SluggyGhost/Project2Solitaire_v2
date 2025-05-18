@@ -133,5 +133,39 @@ function checkForMouseHover()
 end
 
 function resetState()
-  print("RESET THE GAME HERE")
+  -- Clear all pools
+  deck.cards = {}
+  drawnCards.cards = {}
+  for _, t in ipairs(tableaus) do t.cards = {} end
+
+  -- Build a new deck
+  local suits = {SUIT.HEARTS, SUIT.DIAMONDS, SUIT.CLUBS, SUIT.SPADES}
+  for _, suit in ipairs(suits) do
+    for rank = 1, 13 do
+      local card = CardClass:new(suit, rank)
+      deck:addCard(card)
+    end
+  end
+
+  -- Shuffle the deck
+  deck:shuffle()
+
+  -- Deal cards to tableaus
+  for i = 1, 7 do
+    for j = 1, i do
+      local card = deck:drawFromDeck()
+      table.insert(tableaus[i].cards, card)
+    end
+    -- Flip the top card face-up
+    local topCard = tableaus[i].cards[#tableaus[i].cards]
+    if topCard then topCard.faceUp = true end
+    tableaus[i]:updateCardPositions()
+  end
+end
+
+function love.mousePressed(x, y, button)
+  if button == 1 then
+    local mousePos = Vector(x, y)
+    resetButton:click(mousePos)
+  end
 end

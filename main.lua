@@ -62,7 +62,7 @@ function love.load()
 end
 
 function love.update(dt)
-  local allPools = {deck, drawnCards}
+  local allPools = {deck, drawnCards, tableaus[1], tableaus[2], tableaus[3], tableaus[4], tableaus[5], tableaus[6], tableaus[7]}
   for _, t in ipairs(tableaus) do table.insert(allPools, t) end
   grabber:update(allPools)
 end
@@ -70,8 +70,6 @@ end
 function love.draw()
   resetButton:draw()
   drawButton:draw()
-
-  deck:draw()
 
   -- Deck
   love.graphics.setColor(1, 1, 1, 1) -- white (for images)
@@ -90,10 +88,15 @@ function love.draw()
     love.graphics.rectangle("line", tableauAlign, tableauY, deckWidth, deckHeight)
   end
 
-  -- -- Cards
-  -- for _, card in ipairs(allPools) do
-  --   card:draw()
-  -- end
+  deck:draw()
+  drawnCards:draw()
+  tableaus[1]:draw()
+  tableaus[2]:draw()
+  tableaus[3]:draw()
+  tableaus[4]:draw()
+  tableaus[5]:draw()
+  tableaus[6]:draw()
+  tableaus[7]:draw()
   
   -- Card shadow
   love.graphics.setColor(1, 1, 1, 1)
@@ -122,7 +125,7 @@ function resetState()
   local suits = {SUIT.HEARTS, SUIT.DIAMONDS, SUIT.CLUBS, SUIT.SPADES}
   for _, suit in ipairs(suits) do
     for rank = 1, 13 do
-      local card = CardClass:new(suit, rank)
+      local card = CardClass:new(0, 0, suit, rank, false)
       deck:addCard(card)
     end
   end
@@ -136,10 +139,12 @@ function resetState()
       local card = deck:drawFromDeck()
       tableaus[i]:addCard(card)
     end
-    -- Flip the top card face-up
-    local topCard = tableaus[i].cards[#tableaus[i].cards]
-    if topCard then topCard.faceUp = true end
-    tableaus[i]:updateCardPositions()
+    -- Flip the last card in each tableau face-up
+    for _, tableau in ipairs(tableaus) do
+      if #tableau.cards > 0 then
+        tableau.cards[#tableau.cards].faceUp = true
+      end
+    end
   end
 end
 

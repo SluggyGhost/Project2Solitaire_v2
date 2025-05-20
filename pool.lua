@@ -53,8 +53,10 @@ function PoolPrototype:trySnap(card)
 end
 
 function PoolPrototype:draw()
-  for _, card in ipairs(self.cards) do
-    card:draw()
+  if self.showCards then
+    for _, card in ipairs(self.cards) do
+      card:draw()
+    end
   end
 end
 
@@ -83,6 +85,21 @@ function DeckPrototype:shuffle()
     cardCount = cardCount - 1
   end
 end
+
+--function DeckPrototype:cycleDeck()
+--  local isMouseOver =
+--    mousePos.x > deckX and
+--    mousePos.x < deckX + deckWidth and
+--    mousePos.y > deckY and
+--    mousePos.y < deckY + deckHeight
+--  if isMouseOver and love.mouse.isDown(1) then
+--    while #drawnCards.cards > 0 do
+--      local card = 
+--    end
+--  end
+--end
+
+  
 
 -- DRAW PILE
 DrawPilePrototype = PoolPrototype:new(xPos, yPos, true, 55, 0)

@@ -42,7 +42,7 @@ function GrabberClass:grab(pools)
   for _, pool in ipairs(pools) do
     for i = #pool.cards, 1, -1 do
       local card = pool.cards[i]
-      if card:checkForMouseOver(self) and card.faceup then
+      if card:checkForMouseOver(self) and card.faceUp then
         self.heldObject = card
         self.originPool = pool
         table.remove(pool.cards, i)

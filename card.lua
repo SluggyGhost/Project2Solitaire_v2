@@ -35,17 +35,25 @@ function CardClass:draw()
     local offset = 4 * (self.state == CARD_STATE.GRABBED and 2 or 1)
     love.graphics.rectangle("fill", self.position.x + offset, self.position.y + offset, self.size.x, self.size.y, 6, 6)
   end
-  
-  -- Draw base
+
   love.graphics.setColor(1, 1, 1, 1)
+
+  if not self.faceUp then
+    -- Draw the card back
+    love.graphics.draw(faceDownImage, self.position.x, self.position.y)
+    return
+  end
+
+  -- Card face
   love.graphics.rectangle("fill", self.position.x, self.position.y, self.size.x, self.size.y, 6, 6)
-  
-  -- Draw suit and rank
+
+  -- Suit and rank coloring
   if (self.suit == "hearts" or self.suit == "diamonds") then
     love.graphics.setColor(1, 0, 0, 1)
   else
     love.graphics.setColor(0, 0, 0, 1)
   end
+
   if suitImages[self.suit] then
     love.graphics.draw(suitImages[self.suit], self.position.x + 10, self.position.y + 10)
   end
@@ -53,6 +61,7 @@ function CardClass:draw()
     love.graphics.draw(rankImages[self.rank], self.position.x + 30, self.position.y + 10)
   end
 end
+
 
 function CardClass:checkForMouseOver(grabber)
   if self.state == CARD_STATE.GRABBED then

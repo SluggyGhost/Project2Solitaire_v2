@@ -47,13 +47,13 @@ function love.load()
   deck = DeckPrototype:new(deckX, deckY)  -- Full deck
   drawnCards = DrawPilePrototype:new(centerX, deckY) -- Cards drawn from deck
   tableaus = {
-    TableauPrototype:new(100, 300),
-    TableauPrototype:new(200, 300),
-    TableauPrototype:new(300, 300),
-    TableauPrototype:new(400, 300),
-    TableauPrototype:new(500, 300),
-    TableauPrototype:new(600, 300),
-    TableauPrototype:new(700, 300),
+    TableauPrototype:new(1 * tableauLeftEdge, tableauY),
+    TableauPrototype:new(2 * tableauLeftEdge, tableauY),
+    TableauPrototype:new(3 * tableauLeftEdge, tableauY),
+    TableauPrototype:new(4 * tableauLeftEdge, tableauY),
+    TableauPrototype:new(5 * tableauLeftEdge, tableauY),
+    TableauPrototype:new(6 * tableauLeftEdge, tableauY),
+    TableauPrototype:new(7 * tableauLeftEdge, tableauY),
   }
   resetButton = ButtonClass:new(820, 550, "RESET", 100, 40, function() resetState() end)
   drawButton = ButtonClass:new(100, 100, "", 60, 90, function() drawThreeCards() end)

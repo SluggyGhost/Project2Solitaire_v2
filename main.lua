@@ -103,6 +103,11 @@ function love.draw()
   if grabber.currentMousePos then
     love.graphics.print("Mouse: " .. tostring(grabber.currentMousePos.x) .. ", " .. tostring(grabber.currentMousePos.y))
   end
+
+  -- Draw the grabbed card on top of everything
+  if grabber.heldObject then
+    grabber.heldObject:draw()
+  end
 end
 
 function checkForMouseHover()

@@ -23,7 +23,10 @@ function GrabberClass:update(pools)
 
   -- Move held object with mouse
   if self.heldObject then
-    self.heldObject.position = self.currentMousePos
+    self.heldObject.position = Vector(
+      self.currentMousePos.x - self.heldObject.size.x / 2,
+      self.currentMousePos.y - self.heldObject.size.y / 2
+    )
   end
 
   -- Click (grab)
